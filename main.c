@@ -9,25 +9,36 @@ struct Book
 
 int main(void)
 {
-  struct Book*p;
+  int i;
+  struct Book**bookshelf;
   
-  p = (struct Book*)malloc( 2*sizeof(struct Book) );
+  bookshelf = (struct Book**)malloc( (sizeof(struct Book*)) );
+  //3개의 Book 구조체 포인터 변수 동적 할당
+   
+  for(i=0;i<3;i++)
+  bookshelf[i] = (struct Book*)malloc( 10*sizeof( struct Book) );
+  //10개의 Book 구조체 변수 동적 할당
+   
+  bookshelf[1][3].number = 5;
+  strcpy(bookshelf[1][3].title, "C++ Programming");
   
-  if(p == NULL)
-  {
-     printf("메모리 할당 오류\n");
-     return;                       
-  }
+  (bookshelf[2]+4)->number = 3;
+  strcpy((bookshelf[2]+4)->title, "Communications Theory");
   
-  p->number = 1;
-  strcpy(p->title, "C Programming");
+  printf("book(1,3) : %i, %s\n", (bookshelf[1]+3)->number, (bookshelf[1]+3)->title);
+  printf("book(2,4) : %i, %s\n", bookshelf[2][4].number, bookshelf[2][4].title);
   
-  (p+1)->number = 2;
-  strcpy((p+1)->title, "Electronics");
+  //2차원 구조체 메모리 반납 
   
-  free(p);
-
+  for(i=0;i<3;i++)
+    free(bookshelf[i]); 
+  //^구조체 포인터 3개가 각각 가리키는 주소 해제
+  
+  free(bookshelf);
+  //^구조체 이중 포인터가 가리키는 주소 해제 
+  
   system("PAUSE");	
   return;
 }
-// result -> compile
+// result -> book(1,3) : 5, C++ Programming 
+//           book(2,4) : 3, Communications Theory
